@@ -23,8 +23,6 @@ jobs:
       FUNCTION_NAME: thoropa
       GOOS: linux
       GOARCH: amd64
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITHUB_PERSONAL_TOKEN: ${{ secrets.GH_PERSONAL_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -33,13 +31,13 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::375145148456:role/GitHubActionRole
+          role-to-assume: arn:aws:iam::375145148456:role/GitHubActionRoleThoropa
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.24"
+          go-version-file: ./api/go.mod
 
       - name: Download Go modules
         run: go mod download
