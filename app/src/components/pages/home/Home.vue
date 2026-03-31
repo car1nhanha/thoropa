@@ -2,6 +2,7 @@
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed, ref, watchEffect } from "vue";
+import DownloadCsv from "vue-json-csv";
 import { ApiService, type ResponseGetLink } from "../../../service/api";
 import Button from "../../atoms/button.vue";
 import Input from "../../molecules/Input.vue";
@@ -24,6 +25,16 @@ const inputIsValid = computed(() => {
   return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/.test(
     input.value,
   );
+});
+
+const csvData = computed(() => {
+  return links.value.map((link) => ({
+    id: link.Id,
+    original: link.Original,
+    short: `${appURL}/${link.Id}`,
+    accesses: link.Accesses,
+    created_at: new Date(link.CreatedAt * 1000).toISOString(),
+  }));
 });
 
 const shortenLink = () => {
@@ -62,12 +73,14 @@ const reloadLinks = () => {
       <div class="history">
         <div class="history-header">
           <h2 class="title">My links</h2>
-          <Button size="small" @click="() => {}">
-            <template #icon>
-              <FontAwesomeIcon :icon="faDownload" />
-            </template>
-            Download CSV
-          </Button>
+          <DownloadCsv :data="csvData" name="links.csv">
+            <Button size="small" :disabled="!links.length">
+              <template #icon>
+                <FontAwesomeIcon :icon="faDownload" />
+              </template>
+              Download CSV
+            </Button>
+          </DownloadCsv>
         </div>
 
         <History :links="links" :reloadLinks="reloadLinks" />
