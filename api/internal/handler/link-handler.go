@@ -94,6 +94,8 @@ func (h *LinkHandler) Create(c *gin.Context) {
 		return
 	}
 
+	fmt.Println("HEADERS:", c.Request.Header)
+
 	link := model.Link{
 		Id:        id,
 		Ip:        getClientIP(c),
