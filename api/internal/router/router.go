@@ -10,6 +10,7 @@ import (
 
 func SetupRouter(linkHandler *handler.LinkHandler) *gin.Engine {
 	r := gin.Default()
+	r.SetTrustedProxies([]string{"0.0.0.0/0"})
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
